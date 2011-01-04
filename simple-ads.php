@@ -68,7 +68,7 @@ add_filter('the_content', 'simple_ads_output', 20, 1);
 
 function simple_ads_init() {
 	if ( !is_multisite() )
-		exit( 'The Simple Ads Text plugin is only compatible with WordPress Multisite.' );
+		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );
 		
 	load_plugin_textdomain('simple_ads', false, dirname(plugin_basename(__FILE__)).'/languages');
 }
