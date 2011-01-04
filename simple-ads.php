@@ -149,7 +149,7 @@ function simple_ads_output($content) {
 //------------------------------------------------------------------------//
 
 function simple_ads_site_output() {
-	global $wpdb, $wp_roles, $current_user;
+	global $wpdb, $wp_roles, $current_user, $admin_message_settings_page;
 	
 	if(!current_user_can('manage_options')) {
 		echo "<p>" . __('Nice Try...', 'simple_ads') . "</p>";  //If accessed properly, this message doesn't appear.
