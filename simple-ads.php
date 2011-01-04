@@ -149,7 +149,7 @@ function simple_ads_output($content) {
 //------------------------------------------------------------------------//
 
 function simple_ads_site_output() {
-	global $wpdb, $wp_roles, $current_user, $admin_message_settings_page;
+	global $wpdb, $wp_roles, $current_user, $simple_ads_settings_page;
 	
 	if(!current_user_can('manage_options')) {
 		echo "<p>" . __('Nice Try...', 'simple_ads') . "</p>";  //If accessed properly, this message doesn't appear.
@@ -172,7 +172,7 @@ function simple_ads_site_output() {
 			}
 			?>
 			<h2><?php _e('Advertising', 'simple_ads') ?></h2>
-            <form method="post" action="<?php print $admin_message_settings_page; ?>?page=advertising&action=process">
+            <form method="post" action="<?php print $simple_ads_settings_page; ?>?page=advertising&action=process">
             <table class="form-table">
             <tr valign="top">
             <th scope="row"><?php _e('Ad Locations', 'simple_ads') ?></th>
@@ -260,7 +260,7 @@ function simple_ads_site_output() {
 				update_site_option( "advertising_main_blog", "hide" );
 				echo "
 				<SCRIPT LANGUAGE='JavaScript'>
-				window.location='{$admin_message_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
+				window.location='{$simple_ads_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
 				</script>
 				";			
 			} else {
@@ -306,7 +306,7 @@ function simple_ads_site_output() {
 				update_site_option( "advertising_main_blog", $_POST[ 'advertising_main_blog' ] );
 				echo "
 				<SCRIPT LANGUAGE='JavaScript'>
-				window.location='{$admin_message_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
+				window.location='{$simple_ads_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
 				</script>
 				";
 			}
