@@ -1,12 +1,13 @@
 <?php
 /*
 Plugin Name: Simple Ads
-Plugin URI: 
-Description:
-Author: Andrew Billits (Incsub)
-Version: 1.0.1
-Author URI:
+Plugin URI: http://premium.wpmudev.org/project/simple-ads
+Description: This plugin does the advertising basics.
+Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
+Version: 1.0.2
+Author URI: http://premium.wpmudev.org
 WDP ID: 108
+Network: true
 */
 
 /* 
@@ -25,6 +26,16 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+global $simple_ads_settings_page, $simple_ads_settings_page_long;
+
+if ( version_compare($wp_version, '3.0.9', '>') ) {
+	$simple_ads_settings_page = 'settings.php';
+	$simple_ads_settings_page_long = 'network/settings.php';
+} else {
+	$simple_ads_settings_page = 'ms-admin.php';
+	$simple_ads_settings_page_long = 'ms-admin.php';
+}
 
 //------------------------------------------------------------------------//
 //---Classes--------------------------------------------------------------//
@@ -47,16 +58,32 @@ $simple_ads_page_ads = new simple_ads_page_ads();
 //------------------------------------------------------------------------//
 //---Hook-----------------------------------------------------------------//
 //------------------------------------------------------------------------//
+add_action('init', 'simple_ads_init');
 add_action('admin_menu', 'simple_ads_plug_pages');
+add_action('network_admin_menu', 'simple_ads_plug_pages');
 add_filter('the_content', 'simple_ads_output', 20, 1);
 //------------------------------------------------------------------------//
 //---Functions------------------------------------------------------------//
 //------------------------------------------------------------------------//
 
+function simple_ads_init() {
+	if ( !is_multisite() )
+		exit( 'The Simple Ads Text plugin is only compatible with WordPress Multisite.' );
+		
+	load_plugin_textdomain('simple_ads', false, dirname(plugin_basename(__FILE__)).'/languages');
+}
+
 function simple_ads_plug_pages() {
-	global $wpdb, $wp_roles, $current_user;
-	if ( is_site_admin() ) {
-		add_submenu_page('ms-admin.php', 'Advertising', 'Advertising', 10, 'advertising', 'simple_ads_site_output');
+	global $wpdb, $wp_roles, $current_user, $wp_version, $simple_ads_settings_page, $simple_ads_settings_page_long;
+	
+	if ( version_compare($wp_version, '3.0.9', '>') ) {
+	    if ( is_network_admin() ) {
+		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
+	    }
+	} else {
+	    if ( is_site_admin() ) {
+		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
+	    }   
 	}
 }
 
@@ -125,11 +152,11 @@ function simple_ads_site_output() {
 	global $wpdb, $wp_roles, $current_user;
 	
 	if(!current_user_can('manage_options')) {
-		echo "<p>" . __('Nice Try...') . "</p>";  //If accessed properly, this message doesn't appear.
+		echo "<p>" . __('Nice Try...', 'simple_ads') . "</p>";  //If accessed properly, this message doesn't appear.
 		return;
 	}
 	if (isset($_GET['updated'])) {
-		?><div id="message" class="updated fade"><p><?php _e('' . urldecode($_GET['updatedmsg']) . '') ?></p></div><?php
+		?><div id="message" class="updated fade"><p><?php _e(urldecode($_GET['updatedmsg']), 'simple_ads') ?></p></div><?php
 	}
 	echo '<div class="wrap">';
 	switch( $_GET[ 'action' ] ) {
@@ -144,78 +171,78 @@ function simple_ads_site_output() {
 				$advertising_after_code = '';
 			}
 			?>
-			<h2><?php _e('Advertising') ?></h2>
-            <form method="post" action="ms-admin.php?page=advertising&action=process">
+			<h2><?php _e('Advertising', 'simple_ads') ?></h2>
+            <form method="post" action="<?php print $admin_message_settings_page; ?>?page=advertising&action=process">
             <table class="form-table">
             <tr valign="top">
-            <th scope="row"><?php _e('Ad Locations') ?></th>
+            <th scope="row"><?php _e('Ad Locations', 'simple_ads') ?></th>
             <td>
             <label for="advertising_location_before_post_content">
             <input name="advertising_location_before_post_content" id="advertising_location_before_post_content" value="1" type="checkbox" <?php if ( get_site_option('advertising_location_before_post_content') == '1' ) { echo 'checked="checked"'; } ?> >
-            <?php _e('Before Post Content'); ?></label>
+            <?php _e('Before Post Content', 'simple_ads'); ?></label>
             <br />
             <label for="advertising_location_after_post_content">
             <input name="advertising_location_after_post_content" id="advertising_location_after_post_content" value="1" type="checkbox" <?php if ( get_site_option('advertising_location_after_post_content') == '1' ) { echo 'checked="checked"'; } ?> >
-            <?php _e('After Post Content'); ?></label>
+            <?php _e('After Post Content', 'simple_ads'); ?></label>
             <br />
             <label for="advertising_location_before_page_content">
             <input name="advertising_location_before_page_content" id="advertising_location_before_page_content" value="1" type="checkbox" <?php if ( get_site_option('advertising_location_before_page_content') == '1' ) { echo 'checked="checked"'; } ?> >
-            <?php _e('Before Page Content'); ?></label>
+            <?php _e('Before Page Content', 'simple_ads'); ?></label>
             <br />
             <label for="advertising_location_after_page_content">
             <input name="advertising_location_after_page_content" id="advertising_location_after_page_content" value="1" type="checkbox" <?php if ( get_site_option('advertising_location_after_page_content') == '1' ) { echo 'checked="checked"'; } ?> >
-            <?php _e('After Page Content'); ?></label>
+            <?php _e('After Page Content', 'simple_ads'); ?></label>
             </td>
             </tr>
             <tr valign="top">
-            <th scope="row"><?php _e('Ads per page') ?></th>
+            <th scope="row"><?php _e('Ads per page', 'simple_ads') ?></th>
             <td>
             <?php
             $advertising_ads_per_page = get_site_option('advertising_ads_per_page', 3);
 			?>
             <select name="advertising_ads_per_page" id="advertising_ads_per_page" >
-                <option value="1" <?php if ( $advertising_ads_per_page == '1' ) { echo 'selected="selected"'; } ?> ><?php _e('1'); ?></option>
-                <option value="2" <?php if ( $advertising_ads_per_page == '2' ) { echo 'selected="selected"'; } ?> ><?php _e('2'); ?></option>
-                <option value="3" <?php if ( $advertising_ads_per_page == '3' ) { echo 'selected="selected"'; } ?> ><?php _e('3'); ?></option>
-                <option value="4" <?php if ( $advertising_ads_per_page == '4' ) { echo 'selected="selected"'; } ?> ><?php _e('4'); ?></option>
-                <option value="5" <?php if ( $advertising_ads_per_page == '5' ) { echo 'selected="selected"'; } ?> ><?php _e('5'); ?></option>
-                <option value="6" <?php if ( $advertising_ads_per_page == '6' ) { echo 'selected="selected"'; } ?> ><?php _e('6'); ?></option>
-                <option value="7" <?php if ( $advertising_ads_per_page == '7' ) { echo 'selected="selected"'; } ?> ><?php _e('7'); ?></option>
-                <option value="8" <?php if ( $advertising_ads_per_page == '8' ) { echo 'selected="selected"'; } ?> ><?php _e('8'); ?></option>
-                <option value="9" <?php if ( $advertising_ads_per_page == '9' ) { echo 'selected="selected"'; } ?> ><?php _e('9'); ?></option>
-                <option value="10" <?php if ( $advertising_ads_per_page == '10' ) { echo 'selected="selected"'; } ?> ><?php _e('10'); ?></option>
+                <option value="1" <?php if ( $advertising_ads_per_page == '1' ) { echo 'selected="selected"'; } ?> ><?php _e('1', 'simple_ads'); ?></option>
+                <option value="2" <?php if ( $advertising_ads_per_page == '2' ) { echo 'selected="selected"'; } ?> ><?php _e('2', 'simple_ads'); ?></option>
+                <option value="3" <?php if ( $advertising_ads_per_page == '3' ) { echo 'selected="selected"'; } ?> ><?php _e('3', 'simple_ads'); ?></option>
+                <option value="4" <?php if ( $advertising_ads_per_page == '4' ) { echo 'selected="selected"'; } ?> ><?php _e('4', 'simple_ads'); ?></option>
+                <option value="5" <?php if ( $advertising_ads_per_page == '5' ) { echo 'selected="selected"'; } ?> ><?php _e('5', 'simple_ads'); ?></option>
+                <option value="6" <?php if ( $advertising_ads_per_page == '6' ) { echo 'selected="selected"'; } ?> ><?php _e('6', 'simple_ads'); ?></option>
+                <option value="7" <?php if ( $advertising_ads_per_page == '7' ) { echo 'selected="selected"'; } ?> ><?php _e('7', 'simple_ads'); ?></option>
+                <option value="8" <?php if ( $advertising_ads_per_page == '8' ) { echo 'selected="selected"'; } ?> ><?php _e('8', 'simple_ads'); ?></option>
+                <option value="9" <?php if ( $advertising_ads_per_page == '9' ) { echo 'selected="selected"'; } ?> ><?php _e('9', 'simple_ads'); ?></option>
+                <option value="10" <?php if ( $advertising_ads_per_page == '10' ) { echo 'selected="selected"'; } ?> ><?php _e('10', 'simple_ads'); ?></option>
             </select>
-            <br /><?php _e('Maximum number of ads to be shown on a single page. For Google Adsense set this to "3".') ?></td>
+            <br /><?php _e('Maximum number of ads to be shown on a single page. For Google Adsense set this to "3".', 'simple_ads') ?></td>
             </tr>
             <tr valign="top">
-            <th scope="row"><?php _e('"Before" Ad Code') ?></th>
+            <th scope="row"><?php _e('"Before" Ad Code', 'simple_ads') ?></th>
             <td>
             <textarea name="advertising_before_code" type="text" rows="5" wrap="soft" id="advertising_before_code" style="width: 95%"/><?php echo $advertising_before_code; ?></textarea>
-            <br /><?php _e('Used before post and page content.') ?></td>
+            <br /><?php _e('Used before post and page content.', 'simple_ads') ?></td>
             </tr>
             <tr valign="top">
-            <th scope="row"><?php _e('"After" Ad Code') ?></th>
+            <th scope="row"><?php _e('"After" Ad Code', 'simple_ads') ?></th>
             <td>
             <textarea name="advertising_after_code" type="text" rows="5" wrap="soft" id="advertising_after_code" style="width: 95%"/><?php echo $advertising_after_code; ?></textarea>
-            <br /><?php _e('Used after post and page content.') ?></td>
+            <br /><?php _e('Used after post and page content.', 'simple_ads') ?></td>
             </tr>
             <tr valign="top">
-            <th scope="row"><?php _e('Main Blog') ?></th>
+            <th scope="row"><?php _e('Main Blog', 'simple_ads') ?></th>
             <td>
             <?php
             $advertising_main_blog = get_site_option('advertising_main_blog', 'hide');
 			?>
             <select name="advertising_main_blog" id="advertising_main_blog" >
-                <option value="hide" <?php if ( $advertising_main_blog == 'hide' ) { echo 'selected="selected"'; } ?> ><?php _e('Hide Ads'); ?></option>
-                <option value="show" <?php if ( $advertising_main_blog == 'show' ) { echo 'selected="selected"'; } ?> ><?php _e('Show Ads'); ?></option>
+                <option value="hide" <?php if ( $advertising_main_blog == 'hide' ) { echo 'selected="selected"'; } ?> ><?php _e('Hide Ads', 'simple_ads'); ?></option>
+                <option value="show" <?php if ( $advertising_main_blog == 'show' ) { echo 'selected="selected"'; } ?> ><?php _e('Show Ads', 'simple_ads'); ?></option>
             </select>
             <br /><?php //_e('') ?></td>
             </tr>
             </table>
             
             <p class="submit">
-            <input type="submit" name="Submit" value="<?php _e('Save Changes') ?>" />
-			<input type="submit" name="Reset" value="<?php _e('Reset') ?>" />
+            <input type="submit" name="Submit" value="<?php _e('Save Changes', 'simple_ads') ?>" />
+			<input type="submit" name="Reset" value="<?php _e('Reset', 'simple_ads') ?>" />
             </p>
             </form>
 			<?php
@@ -233,7 +260,7 @@ function simple_ads_site_output() {
 				update_site_option( "advertising_main_blog", "hide" );
 				echo "
 				<SCRIPT LANGUAGE='JavaScript'>
-				window.location='ms-admin.php?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.')) . "';
+				window.location='{$admin_message_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
 				</script>
 				";			
 			} else {
@@ -279,7 +306,7 @@ function simple_ads_site_output() {
 				update_site_option( "advertising_main_blog", $_POST[ 'advertising_main_blog' ] );
 				echo "
 				<SCRIPT LANGUAGE='JavaScript'>
-				window.location='ms-admin.php?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.')) . "';
+				window.location='{$admin_message_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
 				</script>
 				";
 			}
@@ -292,4 +319,12 @@ function simple_ads_site_output() {
 	echo '</div>';
 }
 
-?>
+if ( !function_exists( 'wdp_un_check' ) ) {
+	add_action( 'admin_notices', 'wdp_un_check', 5 );
+	add_action( 'network_admin_notices', 'wdp_un_check', 5 );
+
+	function wdp_un_check() {
+		if ( !class_exists( 'WPMUDEV_Update_Notifications' ) && current_user_can( 'edit_users' ) )
+			echo '<div class="error fade"><p>' . __('Please install the latest version of <a href="http://premium.wpmudev.org/project/update-notifications/" title="Download Now &raquo;">our free Update Notifications plugin</a> which helps you stay up-to-date with the most stable, secure versions of WPMU DEV themes and plugins. <a href="http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/">More information &raquo;</a>', 'wpmudev') . '</a></p></div>';
+	}
+}
