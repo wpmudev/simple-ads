@@ -4,7 +4,7 @@ Plugin Name: Simple Ads
 Plugin URI: http://premium.wpmudev.org/project/simple-ads
 Description: This plugin does the advertising basics.
 Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
-Version: 1.0.2
+Version: 1.0.3
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
 Network: true
@@ -101,11 +101,12 @@ function simple_ads_get_ad_code($ad_type) {
 }
 
 function simple_ads_output($content) {
-	global $wpdb, $simple_ads_page_ads;
+	global $wpdb, $simple_ads_page_ads, $current_site;
 	$advertising_ads_per_page = get_site_option('advertising_ads_per_page');
 	$advertising_main_blog = get_site_option('advertising_main_blog', 'hide');
 	$display_ads = 'yes';
-	if ( $wpdb->blogid == 1 && $advertising_main_blog == 'hide' ) {
+
+	if ( $wpdb->blogid == $current_site->id && $advertising_main_blog == 'hide' ) {
 		$display_ads = 'no';
 	}
 	if ( $display_ads == 'yes' ) {
