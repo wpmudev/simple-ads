@@ -8,6 +8,7 @@ Version: 1.0.3
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
 Network: true
+Text Domain: simple_ads
 */
 
 /* 
