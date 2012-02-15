@@ -63,9 +63,15 @@ add_action('init', 'simple_ads_init');
 add_action('admin_menu', 'simple_ads_plug_pages');
 add_action('network_admin_menu', 'simple_ads_plug_pages');
 add_filter('the_content', 'simple_ads_output', 20, 1);
+
+register_activation_hook( __FILE__, 'simple_ads_activate' );
 //------------------------------------------------------------------------//
 //---Functions------------------------------------------------------------//
 //------------------------------------------------------------------------//
+function simple_ads_activate() {
+	if ( !is_multisite() )
+		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );
+}
 
 function simple_ads_init() {
 	if ( !is_multisite() )
