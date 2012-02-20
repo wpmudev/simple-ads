@@ -4,7 +4,7 @@ Plugin Name: Simple Ads
 Plugin URI: http://premium.wpmudev.org/project/simple-ads
 Description: This plugin does the advertising basics.
 Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
-Version: 1.0.3
+Version: 1.0.4
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
 Network: true
