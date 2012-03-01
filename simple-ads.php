@@ -4,10 +4,9 @@ Plugin Name: Simple Ads
 Plugin URI: http://premium.wpmudev.org/project/simple-ads
 Description: This plugin does the advertising basics.
 Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
-Version: 1.0.4
+Version: 1.0.5
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
-Network: true
 Text Domain: simple_ads
 */
 
@@ -30,12 +29,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 global $simple_ads_settings_page, $simple_ads_settings_page_long;
 
-if ( version_compare($wp_version, '3.0.9', '>') ) {
-	$simple_ads_settings_page = 'settings.php';
-	$simple_ads_settings_page_long = 'network/settings.php';
+if (is_multisite()) {
+	if ( version_compare($wp_version, '3.0.9', '>') ) {
+		$simple_ads_settings_page = 'settings.php';
+		$simple_ads_settings_page_long = 'network/settings.php';
+	} else {
+		$simple_ads_settings_page = 'ms-admin.php';
+		$simple_ads_settings_page_long = 'ms-admin.php';
+	}
 } else {
-	$simple_ads_settings_page = 'ms-admin.php';
-	$simple_ads_settings_page_long = 'ms-admin.php';
+	$simple_ads_settings_page = 'options-general.php';
+	$simple_ads_settings_page_long = 'options-general.php';
 }
 
 //------------------------------------------------------------------------//
@@ -50,8 +54,8 @@ class simple_ads_page_ads {
     }
 	
     function increase() {
-		$tmp_page_ads = $this->page_ads;
-		$tmp_page_ads = $tmp_page_ads + 1;
+	$tmp_page_ads = $this->page_ads;
+	$tmp_page_ads = $tmp_page_ads + 1;
         $this->page_ads = $tmp_page_ads;
     }
 }
@@ -60,8 +64,12 @@ $simple_ads_page_ads = new simple_ads_page_ads();
 //---Hook-----------------------------------------------------------------//
 //------------------------------------------------------------------------//
 add_action('init', 'simple_ads_init');
-add_action('admin_menu', 'simple_ads_plug_pages');
-add_action('network_admin_menu', 'simple_ads_plug_pages');
+// add_action('admin_menu', 'simple_ads_pages');
+if (is_multisite()) {
+	add_action('network_admin_menu', 'simple_ads_network_pages');
+} else {
+	add_action('admin_menu', 'simple_ads_pages');
+}
 add_filter('the_content', 'simple_ads_output', 20, 1);
 
 register_activation_hook( __FILE__, 'simple_ads_activate' );
@@ -69,29 +77,35 @@ register_activation_hook( __FILE__, 'simple_ads_activate' );
 //---Functions------------------------------------------------------------//
 //------------------------------------------------------------------------//
 function simple_ads_activate() {
-	if ( !is_multisite() )
-		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );
+	/*if ( !is_multisite() )
+		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' ); */
 }
 
 function simple_ads_init() {
-	if ( !is_multisite() )
-		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );
+	/*if ( !is_multisite() )
+		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );*/
 		
 	load_plugin_textdomain('simple_ads', false, dirname(plugin_basename(__FILE__)).'/languages');
 }
 
-function simple_ads_plug_pages() {
+function simple_ads_network_pages() {
 	global $wpdb, $wp_roles, $current_user, $wp_version, $simple_ads_settings_page, $simple_ads_settings_page_long;
 	
 	if ( version_compare($wp_version, '3.0.9', '>') ) {
 	    if ( is_network_admin() ) {
-		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
+		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 'manage_network_options', 'advertising', 'simple_ads_site_output');
 	    }
 	} else {
 	    if ( is_site_admin() ) {
 		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
 	    }   
 	}
+}
+
+function simple_ads_pages() {
+	global $wpdb, $wp_roles, $current_user, $wp_version, $simple_ads_settings_page, $simple_ads_settings_page_long;
+	
+	add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 'manage_options', 'advertising', 'simple_ads_site_output');
 }
 
 function simple_ads_get_ad_code($ad_type) {
