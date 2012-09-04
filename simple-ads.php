@@ -96,7 +96,7 @@ function simple_ads_network_pages() {
 		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 'manage_network_options', 'advertising', 'simple_ads_site_output');
 	    }
 	} else {
-	    if ( is_site_admin() ) {
+	    if ( is_super_admin() ) {
 		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
 	    }   
 	}
