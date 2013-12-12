@@ -10,7 +10,7 @@ WDP ID: 108
 Text Domain: simple_ads
 */
 
-/* 
+/*
 Copyright 2007-2009 Incsub (http://incsub.com)
 
 This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ class simple_ads_page_ads {
     function get_count() {
         return $this->page_ads;
     }
-	
+
     function increase() {
 	$tmp_page_ads = $this->page_ads;
 	$tmp_page_ads = $tmp_page_ads + 1;
@@ -84,13 +84,13 @@ function simple_ads_activate() {
 function simple_ads_init() {
 	/*if ( !is_multisite() )
 		exit( 'The Simple Ads plugin is only compatible with WordPress Multisite.' );*/
-		
+
 	load_plugin_textdomain('simple_ads', false, dirname(plugin_basename(__FILE__)).'/languages');
 }
 
 function simple_ads_network_pages() {
 	global $wpdb, $wp_roles, $current_user, $wp_version, $simple_ads_settings_page, $simple_ads_settings_page_long;
-	
+
 	if ( version_compare($wp_version, '3.0.9', '>') ) {
 	    if ( is_network_admin() ) {
 		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 'manage_network_options', 'advertising', 'simple_ads_site_output');
@@ -98,13 +98,13 @@ function simple_ads_network_pages() {
 	} else {
 	    if ( is_super_admin() ) {
 		add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 10, 'advertising', 'simple_ads_site_output');
-	    }   
+	    }
 	}
 }
 
 function simple_ads_pages() {
 	global $wpdb, $wp_roles, $current_user, $wp_version, $simple_ads_settings_page, $simple_ads_settings_page_long;
-	
+
 	add_submenu_page($simple_ads_settings_page, __('Advertising', 'simple_ads'), __('Advertising', 'simple_ads'), 'manage_options', 'advertising', 'simple_ads_site_output');
 }
 
@@ -172,7 +172,7 @@ function simple_ads_output($content) {
 
 function simple_ads_site_output() {
 	global $wpdb, $wp_roles, $current_user, $simple_ads_settings_page;
-	
+
 	if(!current_user_can('manage_options')) {
 		echo "<p>" . __('Nice Try...', 'simple_ads') . "</p>";  //If accessed properly, this message doesn't appear.
 		return;
@@ -261,10 +261,10 @@ function simple_ads_site_output() {
             <br /><?php //_e('') ?></td>
             </tr>
             </table>
-            
+
             <p class="submit">
-            <input type="submit" name="Submit" value="<?php _e('Save Changes', 'simple_ads') ?>" />
-			<input type="submit" name="Reset" value="<?php _e('Reset', 'simple_ads') ?>" />
+            <input class="button button-primary" type="submit" name="Submit" value="<?php _e('Save Changes', 'simple_ads') ?>" />
+			<input class="button button-secondary" type="submit" name="Reset" value="<?php _e('Reset', 'simple_ads') ?>" />
             </p>
             </form>
 			<?php
@@ -284,7 +284,7 @@ function simple_ads_site_output() {
 				<SCRIPT LANGUAGE='JavaScript'>
 				window.location='{$simple_ads_settings_page}?page=advertising&updated=true&updatedmsg=" . urlencode(__('Changes saved.', 'simple_ads')) . "';
 				</script>
-				";			
+				";
 			} else {
 				if ( empty($_POST[ 'advertising_before_code' ]) ) {
 					$advertising_before_code = 'empty';
@@ -296,7 +296,7 @@ function simple_ads_site_output() {
 				} else {
 					$advertising_after_code = $_POST[ 'advertising_after_code' ];
 				}
-				
+
 				if ( empty($_POST[ 'advertising_location_before_post_content' ]) ) {
 					$advertising_location_before_post_content = 'empty';
 				} else {
@@ -317,7 +317,7 @@ function simple_ads_site_output() {
 				} else {
 					$advertising_location_after_page_content = $_POST[ 'advertising_location_after_page_content' ];
 				}
-				
+
 				update_site_option( "advertising_before_code", $advertising_before_code );
 				update_site_option( "advertising_after_code", $advertising_after_code );
 				update_site_option( "advertising_ads_per_page", $_POST[ 'advertising_ads_per_page' ] );
