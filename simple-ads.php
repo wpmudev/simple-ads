@@ -27,10 +27,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-global $wpmudev_notices;
-$wpmudev_notices[] = array( 'id'=> 108, 'name'=> 'Simple Ads', 'screens' => array( 'settings_page_advertising-network' ) );
-include_once(plugin_dir_path( __FILE__ ).'external/dash-notice/wpmudev-dash-notification.php');
-
 global $simple_ads_settings_page, $simple_ads_settings_page_long;
 
 if (is_multisite()) {
@@ -344,3 +340,7 @@ function simple_ads_site_output() {
 	}
 	echo '</div>';
 }
+
+global $wpmudev_notices;
+$wpmudev_notices[] = array( 'id'=> 108, 'name'=> 'Simple Ads', 'screens' => array( 'settings_page_advertising-network' ) );
+include_once(plugin_dir_path( __FILE__ ).'external/dash-notice/wpmudev-dash-notification.php');
