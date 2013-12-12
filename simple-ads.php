@@ -4,7 +4,7 @@ Plugin Name: Simple Ads
 Plugin URI: http://premium.wpmudev.org/project/simple-ads
 Description: This plugin does the advertising basics.
 Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
-Version: 1.0.5
+Version: 1.0.6
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
 Text Domain: simple_ads
@@ -26,6 +26,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+global $wpmudev_notices;
+$wpmudev_notices[] = array( 'id'=> 108, 'name'=> 'Simple Ads', 'screens' => array( 'settings_page_advertising-network' ) );
+include_once(plugin_dir_path( __FILE__ ).'external/dash-notice/wpmudev-dash-notification.php');
 
 global $simple_ads_settings_page, $simple_ads_settings_page_long;
 
@@ -339,14 +343,4 @@ function simple_ads_site_output() {
 		//---------------------------------------------------//
 	}
 	echo '</div>';
-}
-
-if ( !function_exists( 'wdp_un_check' ) ) {
-	add_action( 'admin_notices', 'wdp_un_check', 5 );
-	add_action( 'network_admin_notices', 'wdp_un_check', 5 );
-
-	function wdp_un_check() {
-		if ( !class_exists( 'WPMUDEV_Update_Notifications' ) && current_user_can( 'edit_users' ) )
-			echo '<div class="error fade"><p>' . __('Please install the latest version of <a href="http://premium.wpmudev.org/project/update-notifications/" title="Download Now &raquo;">our free Update Notifications plugin</a> which helps you stay up-to-date with the most stable, secure versions of WPMU DEV themes and plugins. <a href="http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/">More information &raquo;</a>', 'wpmudev') . '</a></p></div>';
-	}
 }
