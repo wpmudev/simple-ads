@@ -3,7 +3,7 @@
 Plugin Name: Simple Ads
 Plugin URI: http://premium.wpmudev.org/project/simple-ads
 Description: This plugin does the advertising basics.
-Author: S H Mohanjith (Incsub), Andrew Billits (Incsub)
+Author: WPMU DEV
 Version: 1.0.6
 Author URI: http://premium.wpmudev.org
 WDP ID: 108
@@ -12,6 +12,8 @@ Text Domain: simple_ads
 
 /*
 Copyright 2007-2009 Incsub (http://incsub.com)
+Author - S H Mohanjith (Incsub)
+Contributors - Andrew Billits (Incsub)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
